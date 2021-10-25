@@ -7,6 +7,8 @@ import cv2
 from tqdm import tqdm
 import os
 from albumentations.pytorch import ToTensorV2
+from PIL import Image
+
 import Config
 
 
@@ -25,13 +27,15 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
 
 
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
-    image = cv2.imread(image_path)
+    image = Image.open(os.path.join(image_path))
+    image = np.array(image)
     image = Config.transforms(image=image)["image"]
     image = image.reshape(1, 3, 512, 512)
     image = image.to(device=device, dtype=torch.float32)
     load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
     landmarks = model(image)
     landmarks = landmarks.reshape(68, 2)
+    print(landmarks)
     image = image[0].permute(1, 2, 0)
     image = image.cpu().detach().numpy()
     vis_keypoints(image.astype(np.uint8), list(landmarks.cpu().detach().numpy()), color=KEYPOINT_COLOR,
@@ -87,25 +91,33 @@ def load_checkpoint(checkpoint, model, optimizer, lr):
 
 def vis_keypoints(image, keypoints, color=KEYPOINT_COLOR, diameter=2):
     image = image.copy()
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     for point in keypoints:
         x, y = point[0], point[1]
         cv2.circle(image, (int(x), int(y)), diameter, (0, 255, 0), -1)
-
     cv2.imshow('image', image)
     cv2.waitKey(0)
 
 
 # get the mean and the std for each channel of images
 def get_mean_std(loader):
-    mean = 0.
-    std = 0.
-    nb_samples = 0.
-    for data in loader:
-        batch_samples = data.size(0)
-        data = data.view(batch_samples, data.size(1), -1)
-        mean += data.mean(2).sum(0)
-        std += data.std(2).sum(0)
-        nb_samples += batch_samples
-    mean /= nb_samples
-    std /= nb_samples
-    return mean, std
+    nimages = 0
+    mean = 0.0
+    var = 0.0
+    for i_batch, batch_target in enumerate(loader):
+        batch = batch_target[0]
+        # Rearrange batch to be the shape of [B, C, W * H]
+        batch = batch.view(batch.size(0), batch.size(1), -1)
+        # Update total number of images
+        nimages += batch.size(0)
+        # Compute mean and std here
+        mean += batch.cpu().detach().numpy().astype(np.uint8).mean(2).sum(0)
+        var += batch.cpu().detach().numpy().astype(np.uint8).var(2).sum(0)
+    print("le mean est :", mean)
+    print("le std est :", var)
+    mean /= nimages
+    var /= nimages
+    std = torch.sqrt(torch.from_numpy(var))
+    return torch.from_numpy(mean), std
+    # print(mean)
+    # print(std)

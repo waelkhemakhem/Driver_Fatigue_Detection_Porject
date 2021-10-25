@@ -30,11 +30,11 @@ train_transforms = A.Compose(
             A.Blur(p=0.8),
         ], p=1.0),
         # A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=0, p=0.2, border_mode=cv2.BORDER_CONSTANT),
-        # A.Normalize(
-        #     mean=[0.4897, 0.4897, 0.4897],
-        #     std=[0.2330, 0.2330, 0.2330],
-        #     max_pixel_value=255.0,
-        # ),
+        A.Normalize(
+            mean=[131.6930, 109.5418, 98.3958],
+            std=[66.2921, 60.1082, 59.9244],
+            max_pixel_value=255.0,
+        ),
         ToTensorV2(),
     ], keypoint_params=A.KeypointParams(format="xy", remove_invisible=False),
 )
@@ -42,21 +42,29 @@ train_transforms = A.Compose(
 val_transforms = A.Compose(
     [
         A.Resize(height=512, width=512),
-        # A.Normalize(
-        #     mean=[0.4897, 0.4897, 0.4897],
-        #     std=[0.2330, 0.2330, 0.2330],
-        #     max_pixel_value=255.0,
-        # ),
+        A.Normalize(
+            mean=[131.6930, 109.5418,  98.3958],
+            std=[66.2921, 60.1082, 59.9244],
+            max_pixel_value=255.0,
+        ),
         ToTensorV2(),
-    ], keypoint_params=A.KeypointParams(format="xy", remove_invisible=False),)
+    ], keypoint_params=A.KeypointParams(format="xy", remove_invisible=False), )
 
 transforms = A.Compose(
     [
         A.Resize(height=512, width=512),
-        # A.Normalize(
-        #     mean=[0.4897, 0.4897, 0.4897],
-        #     std=[0.2330, 0.2330, 0.2330],
-        #     max_pixel_value=255.0,
-        # ),
+        A.Normalize(
+            mean=[131.6930, 109.5418, 98.3958],
+            std=[66.2921, 60.1082, 59.9244],
+            max_pixel_value=255.0,
+        ),
         ToTensorV2(),
     ])
+
+# invTrans = transforms.Compose([transforms.Normalize(mean=[0., 0., 0.],
+#                                                     std=[1 / 0.229, 1 / 0.224, 1 / 0.225]),
+#                                transforms.Normalize(mean=[-0.485, -0.456, -0.406],
+#                                                     std=[1., 1., 1.]),
+#                                ])
+#
+# inv_tensor = invTrans(inp_tensor)
