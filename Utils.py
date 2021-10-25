@@ -23,7 +23,7 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
             labels[train_index: test_index, ],
             labels[test_index: val_index, ]]
 
-
+#
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
     image = cv2.imread(image_path)
     image = Config.transforms(image=image)["image"]
