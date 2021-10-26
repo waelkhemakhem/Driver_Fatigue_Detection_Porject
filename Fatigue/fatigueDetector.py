@@ -1,10 +1,10 @@
-# from main import *
+from testor import *
 from DetectorUtils import norm
 
-
 # main functions
-# visKeypoints(loadImage(), npData)
-# image = loadImage()
+visKeypoints(loadImage(), npData)
+image = loadImage()
+
 
 # TODO: isEyeClosed() , isYawning(), headDetection()
 
@@ -42,14 +42,14 @@ def headDetection():
     """
     pass
 
+
 # firstEye 37..42 => 38..44
 # secondEye 43..48 => 44..50
-# print("=== EYES CLOSED STATE ===")
-# val1: bool = isEyeClosed(npData[38:44, :])
-# val2: bool = isEyeClosed(npData[44:50, :])
-# print(val1, val2)
-# print("=== MOUTH OPEN STATE ===")
-# # mouth key points 48..66 => 49..68
-# val3: bool = isYawning(npData[49:68, :])
-# print(val3)
-#
+print("=== EYES CLOSED STATE ===")
+val1: bool = isEyeClosed(npData[38:44, :])
+val2: bool = isEyeClosed(npData[44:50, :])
+print(val1, val2)
+print("=== MOUTH OPEN STATE ===")
+# mouth key points 48..66 => 49..68
+val3: bool = isYawning(npData[49:68, :])
+print(val3)
