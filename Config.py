@@ -53,11 +53,11 @@ val_transforms = A.Compose(
 transforms = A.Compose(
     [
         A.Resize(height=512, width=512),
-        A.Normalize(
-            mean=[131.6930, 109.5418, 98.3958],
-            std=[66.2921, 60.1082, 59.9244],
-            max_pixel_value=255.0,
-        ),
+        # A.Normalize(
+        #     mean=[131.6930, 109.5418, 98.3958],
+        #     std=[66.2921, 60.1082, 59.9244],
+        #     max_pixel_value=255.0,
+        # ),
         ToTensorV2(),
     ])
 

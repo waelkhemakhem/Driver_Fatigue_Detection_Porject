@@ -29,33 +29,24 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
     image = Image.open(os.path.join(image_path))
     image = np.array(image)
+    image_t = image
     image = Config.transforms(image=image)["image"]
     image = image.reshape(1, 3, 512, 512)
-    image = image.to(device=device, dtype=torch.float32)
+    image = image.to(device='cpu', dtype=torch.float32)
     load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
     landmarks = model(image)
     landmarks = landmarks.reshape(68, 2)
     print(landmarks)
     image = image[0].permute(1, 2, 0)
     image = image.cpu().detach().numpy()
-    vis_keypoints(image.astype(np.uint8), list(landmarks.cpu().detach().numpy()), color=KEYPOINT_COLOR,
+    vis_keypoints(image_t.astype(np.uint8), list(landmarks.cpu().detach().numpy()), color=KEYPOINT_COLOR,
                   diameter=2)
 
 
 # test the model ==> print the average RMSE
-def test_model(model, test_loader, loss_fn, device):
-    losses = []
-    loop = tqdm(test_loader)
-    num_examples = 0
-    with torch.no_grad():
-        for batch_idx, (X, y) in enumerate(loop):
-            data = X.to(device=device, dtype=torch.float32)
-            targets = y.to(device=device, dtype=torch.float32)
-            scores = model(data)
-            loss = loss_fn(scores, targets)
-            num_examples += torch.numel(scores[targets != -1])
-            losses.append(loss.item())
-    print(f"Loss average in the test: {(sum(losses) / num_examples) ** 0.5}")
+# def test_model(model, test_loader, loss_fn, device):
+#     pass
+
 
 
 def get_images_labels(all_data_path):
