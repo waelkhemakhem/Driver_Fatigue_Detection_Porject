@@ -4,12 +4,12 @@ import json
 
 
 def getDataArray():
-    with open('all_data.json') as f:
+    with open('../all_data.json') as f:
         data = json.load(f)
         return data
 
 
-img_url = "00018.png"
+img_url = "../images/00018.png"
 img_num = "18"
 
 npData = getDataArray()
