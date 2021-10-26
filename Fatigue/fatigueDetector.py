@@ -12,7 +12,7 @@ image = loadImage()
 def isEyeClosed(eyePoints: list) -> [float, bool]:
     """Detect if the eye is closed
 
-        :param [P1..P6] list of 6 eye keypoints
+        :param eyePoints: [P1..P6] list of 6 eye key points
         :return: the eye closed value and Boolean, if the eye is closed or not
     """
     EYE_AR_THRESHOLD = 0.3  # if result < threshold then the eye is closed
@@ -24,7 +24,7 @@ def isEyeClosed(eyePoints: list) -> [float, bool]:
 def isYawning(mouthPoints: list) -> [float, bool]:
     """Detect the yawn state
 
-        :param [P48..P66] list of 6 mouth keypoints
+        :param mouthPoints: [P48..P66] list of 6 mouth keypoints
         :return: the yawn value and Boolean, if the person is yawning
     """
     MOUTH_AR_THRESHOLD = 0.3  # if result < threshold then the eye is closed

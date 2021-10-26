@@ -2,15 +2,17 @@ import cv2
 import numpy as np
 import json
 
+# global urls
+img_url = "../images/00018.png"
+img_num = "18"
+data_url = "../all_data.json"
+
 
 def getDataArray():
-    with open('../all_data.json') as f:
+    with open(data_url) as f:
         data = json.load(f)
         return data
 
-
-img_url = "../images/00018.png"
-img_num = "18"
 
 npData = getDataArray()
 npData = np.asarray(npData[img_num]["face_landmarks"])
