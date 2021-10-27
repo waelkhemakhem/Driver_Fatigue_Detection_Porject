@@ -13,9 +13,9 @@ LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 5e-5
 images_path = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/"
 all_data_path = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/all_data.json"
-CHECKPOINT_FILE = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/efficientnet-b0-KeyPointsModel.pth.tar"
+CHECKPOINT_FILE = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/efficientnet-b0_v2-KeyPointsModel.pth.tar"
 DEVICE = 'cpu'
-model = EfficientNet.from_pretrained("efficientnet-b7")
+model = EfficientNet.from_pretrained("efficientnet-b0")
 model._fc = nn.Linear(in_features=1280, out_features=68 * 2, bias=True)
 model = model.to(DEVICE)
 optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
@@ -25,23 +25,28 @@ val_coef = 0.1
 SAVE_MODEL = True
 LOAD_MODEL = False
 if __name__ == '__main__':
-    train(model=model,
-          DEVICE=DEVICE,
-          LEARNING_RATE=LEARNING_RATE,
-          WEIGHT_DECAY=WEIGHT_DECAY,
-          NUM_EPOCHS=NUM_EPOCHS,
-          BATCH_SIZE=BATCH_SIZE,
-          PIN_MEMORY=PIN_MEMORY,
-          NUM_WORKERS=NUM_WORKERS,
-          images_path=images_path,
-          all_data_path=all_data_path,
-          CHECKPOINT_FILE=CHECKPOINT_FILE,
-          train_coef=train_coef,
-          test_coef=test_coef,
-          val_coef=val_coef,
-          SAVE_MODEL=SAVE_MODEL,
-          LOAD_MODEL=LOAD_MODEL,
-          )
+    plot_image_with_landmarks(
+        checkpoint=CHECKPOINT_FILE,
+        model=model, optimizer=optimizer, device=DEVICE,
+        lr=LEARNING_RATE,
+        image_path="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/00001.png")
+    # train(model=model,
+    #       DEVICE=DEVICE,
+    #       LEARNING_RATE=LEARNING_RATE,
+    #       WEIGHT_DECAY=WEIGHT_DECAY,
+    #       NUM_EPOCHS=NUM_EPOCHS,
+    #       BATCH_SIZE=BATCH_SIZE,
+    #       PIN_MEMORY=PIN_MEMORY,
+    #       NUM_WORKERS=NUM_WORKERS,
+    #       images_path=images_path,
+    #       all_data_path=all_data_path,
+    #       CHECKPOINT_FILE=CHECKPOINT_FILE,
+    #       train_coef=train_coef,
+    #       test_coef=test_coef,
+    #       val_coef=val_coef,
+    #       SAVE_MODEL=SAVE_MODEL,
+    #       LOAD_MODEL=LOAD_MODEL,
+    #       )
 # test(BATCH_SIZE=BATCH_SIZE,
 #      PIN_MEMORY=PIN_MEMORY,
 #      NUM_WORKERS=NUM_WORKERS,
@@ -111,11 +116,7 @@ if __name__ == '__main__':
 # # #      LEARNING_RATE=LEARNING_RATE,
 # # #      DEVICE=DEVICE
 # # # # #      )
-# plot_image_with_landmarks(
-#     checkpoint="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/fisrtVGG16KeyPointsModel.pth.tar",
-#     model=model, optimizer=optimizer, device=DEVICE,
-#     lr=LEARNING_RATE,
-#     image_path="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/00001.png")
+
 # print("============================")
 # plot_image_with_landmarks(
 #     checkpoint="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/fisrtVGG16KeyPointsModel.pth.tar",
