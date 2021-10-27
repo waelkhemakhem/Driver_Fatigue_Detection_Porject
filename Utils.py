@@ -8,7 +8,7 @@ from tqdm import tqdm
 import os
 from albumentations.pytorch import ToTensorV2
 from PIL import Image
-
+import time
 import Config
 
 
@@ -29,14 +29,27 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
     load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
     # reading image
-    image = Image.open(os.path.join(image_path))
-    image = np.array(image)
+    # image = Image.open(os.path.join(image_path))
+    # image = np.array(image)
+    image = cv2.imread(os.path.join(image_path))
+
+    # let's resize our image to be 150 pixels wide, but in order to
+    # prevent our resized image from being skewed/distorted, we must
+    # first calculate the ratio of the new width to the old width
+    r = 512.0 / image.shape[1]
+    dim = (512, 512)
+    # perform the actual resizing of the image
+    image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
     image_t = image
     image = Config.transforms(image=image)["image"]
     image = image.reshape(1, 3, 512, 512)
     image = image.to(device='cpu', dtype=torch.float32)
-
+    import time
+    start_time = time.time()
     landmarks = model(image)
+    end_time = time.time()
+    total_time = end_time - start_time
+    print("Time: ", total_time)
     landmarks = landmarks.reshape(68, 2)
     print(landmarks)
     image = image[0].permute(1, 2, 0)
@@ -48,7 +61,6 @@ def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_pa
 # test the model ==> print the average RMSE
 # def test_model(model, test_loader, loss_fn, device):
 #     pass
-
 
 
 def get_images_labels(all_data_path):
@@ -83,7 +95,6 @@ def load_checkpoint(checkpoint, model, optimizer, lr):
 
 
 def vis_keypoints(image, keypoints, color=KEYPOINT_COLOR, diameter=2):
-    image = image.copy()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     for point in keypoints:
         x, y = point[0], point[1]

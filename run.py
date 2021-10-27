@@ -29,7 +29,7 @@ if __name__ == '__main__':
         checkpoint=CHECKPOINT_FILE,
         model=model, optimizer=optimizer, device=DEVICE,
         lr=LEARNING_RATE,
-        image_path="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/00001.png")
+        image_path="D:/Photos/test.jpg")
     # train(model=model,
     #       DEVICE=DEVICE,
     #       LEARNING_RATE=LEARNING_RATE,
