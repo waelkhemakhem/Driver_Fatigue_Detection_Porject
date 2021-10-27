@@ -27,13 +27,15 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
 
 
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
+    load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
+    # reading image
     image = Image.open(os.path.join(image_path))
     image = np.array(image)
     image_t = image
     image = Config.transforms(image=image)["image"]
     image = image.reshape(1, 3, 512, 512)
     image = image.to(device='cpu', dtype=torch.float32)
-    load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
+
     landmarks = model(image)
     landmarks = landmarks.reshape(68, 2)
     print(landmarks)
