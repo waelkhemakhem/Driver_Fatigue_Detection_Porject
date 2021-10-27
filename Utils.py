@@ -31,12 +31,12 @@ def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_pa
     # reading image
     # image = Image.open(os.path.join(image_path))
     # image = np.array(image)
-    image = cv2.imread(os.path.join(image_path))
-
+    image = cv2.imread("D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/01082.png")
     # let's resize our image to be 150 pixels wide, but in order to
+    print(image)
     # prevent our resized image from being skewed/distorted, we must
     # first calculate the ratio of the new width to the old width
-    r = 512.0 / image.shape[1]
+    # r = 512.0 / image.shape[1]
     dim = (512, 512)
     # perform the actual resizing of the image
     image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)

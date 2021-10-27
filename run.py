@@ -23,13 +23,35 @@ train_coef = 0.8
 test_coef = 0.1
 val_coef = 0.1
 SAVE_MODEL = True
-LOAD_MODEL = False
+import cv2
+LOAD_MODEL = True
 if __name__ == '__main__':
-    plot_image_with_landmarks(
-        checkpoint=CHECKPOINT_FILE,
-        model=model, optimizer=optimizer, device=DEVICE,
-        lr=LEARNING_RATE,
-        image_path="D:/Photos/test.jpg")
+    train(model,
+          DEVICE,
+          LEARNING_RATE,
+          WEIGHT_DECAY,
+          NUM_EPOCHS,
+          BATCH_SIZE,
+          PIN_MEMORY,
+          NUM_WORKERS,
+          images_path,
+          all_data_path,
+          CHECKPOINT_FILE,
+          train_coef,
+          test_coef,
+          val_coef,
+          SAVE_MODEL,
+          LOAD_MODEL,
+          )
+    # image = cv2.imread("D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/01082.png")
+    # # let's resize our image to be 150 pixels wide, but in order to
+    # print(image)
+    # plot_image_with_landmarks(
+    #     checkpoint=CHECKPOINT_FILE,
+    #     model=model, optimizer=optimizer, device=DEVICE,
+    #     lr=LEARNING_RATE,
+    #
+    #     image_path="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/01082.png")
     # train(model=model,
     #       DEVICE=DEVICE,
     #       LEARNING_RATE=LEARNING_RATE,
