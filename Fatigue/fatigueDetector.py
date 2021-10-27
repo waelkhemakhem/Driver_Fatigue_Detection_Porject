@@ -6,9 +6,6 @@ visKeypoints(loadImage(), npData)
 image = loadImage()
 
 
-# TODO: isEyeClosed() , isYawning(), headDetection()
-
-
 def isEyeClosed(eyePoints: list) -> [float, bool]:
     """Detect if the eye is closed
 

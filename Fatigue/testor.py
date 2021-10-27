@@ -3,8 +3,8 @@ import numpy as np
 import json
 
 # global urls
-img_url = "../images/00018.png"
-img_num = "18"
+img_url = "../images/00059.png"
+img_num = "59"
 data_url = "../all_data.json"
 
 
