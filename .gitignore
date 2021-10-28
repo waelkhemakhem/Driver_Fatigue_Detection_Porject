@@ -1,5 +1,5 @@
 .idea
 
+efficientnet-b0_v2-KeyPointsModel.pth.tar
 all_data.json
 /images
-efficientnet-b0_v2-KeyPointsModel.pth.tar
