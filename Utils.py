@@ -27,31 +27,22 @@ def split_train_val_test(images, labels, train=0.6, test=0.2, val=0.2):
 
 
 def plot_image_with_landmarks(checkpoint, model, optimizer, device, lr, image_path):
-    load_checkpoint(torch.load(checkpoint), model, optimizer, lr)
+    load_checkpoint(torch.load(checkpoint, map_location=torch.device(device)), model, optimizer, lr)
     # reading image
-    # image = Image.open(os.path.join(image_path))
-    # image = np.array(image)
-    image = cv2.imread("D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/01082.png")
-    # let's resize our image to be 150 pixels wide, but in order to
-    print(image)
-    # prevent our resized image from being skewed/distorted, we must
-    # first calculate the ratio of the new width to the old width
-    # r = 512.0 / image.shape[1]
-    dim = (512, 512)
-    # perform the actual resizing of the image
-    image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+    image = cv2.imread(image_path)
+    # perform the actual resizing of the image to 512*512
+    image = cv2.resize(image, (512, 512), interpolation=cv2.INTER_AREA)
     image_t = image
     image = Config.transforms(image=image)["image"]
     image = image.reshape(1, 3, 512, 512)
-    image = image.to(device='cpu', dtype=torch.float32)
-    import time
-    start_time = time.time()
+    image = image.to(device=device, dtype=torch.float32)
+    # start_time = time.time()
     landmarks = model(image)
-    end_time = time.time()
-    total_time = end_time - start_time
-    print("Time: ", total_time)
+    # end_time = time.time()
+    # total_time = end_time - start_time
+    # print("Time: ", total_time)
     landmarks = landmarks.reshape(68, 2)
-    print(landmarks)
+    # print(landmarks)
     image = image[0].permute(1, 2, 0)
     image = image.cpu().detach().numpy()
     vis_keypoints(image_t.astype(np.uint8), list(landmarks.cpu().detach().numpy()), color=KEYPOINT_COLOR,

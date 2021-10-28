@@ -114,7 +114,8 @@ def test(BATCH_SIZE,
         test_coef=test_coef,
         val_coef=val_coef
     )[2]
-    load_checkpoint(torch.load(CHECKPOINT_FILE), model, optimizer, LEARNING_RATE)
+    load_checkpoint(torch.load(CHECKPOINT_FILE, map_location=torch.device('cpu')), model, optimizer, LEARNING_RATE,
+                    )
     loss_fn = nn.MSELoss(reduction="mean")
     losses = []
     loop = tqdm(test_loader)
@@ -161,7 +162,7 @@ def train(model,
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
     scaler = torch.cuda.amp.GradScaler()
     if LOAD_MODEL and CHECKPOINT_FILE in os.listdir():
-        load_checkpoint(torch.load(CHECKPOINT_FILE), model, optimizer, LEARNING_RATE)
+        load_checkpoint(torch.load(CHECKPOINT_FILE, map_location=torch.device("cpu")), model, optimizer, LEARNING_RATE)
     for epoch in range(NUM_EPOCHS):
         train_one_epoch(train_loader, model, optimizer, loss_fn, scaler, DEVICE)
         print("validation of the model")

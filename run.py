@@ -4,6 +4,7 @@ from torchvision.models import vgg16
 from torch import nn, optim
 import torch
 from efficientnet_pytorch import EfficientNet
+import cv2
 
 BATCH_SIZE = 64
 PIN_MEMORY = True
@@ -11,11 +12,15 @@ NUM_WORKERS = 0
 NUM_EPOCHS = 50
 LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 5e-5
-images_path = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/"
-all_data_path = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/all_data.json"
-CHECKPOINT_FILE = "D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/efficientnet-b0_v2-KeyPointsModel.pth.tar"
+###############################################################
+images_path = "../images/"
+image_to_plot = "../images/00018.png"
+all_data_path = "all_data.json"
+CHECKPOINT_FILE = "../efficientnet-b0_v2-KeyPointsModel.pth.tar"
+pretrained_model_name = "efficientnet-b0"
+###############################################################
 DEVICE = 'cpu'
-model = EfficientNet.from_pretrained("efficientnet-b0")
+model = EfficientNet.from_pretrained(pretrained_model_name)
 model._fc = nn.Linear(in_features=1280, out_features=68 * 2, bias=True)
 model = model.to(DEVICE)
 optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
@@ -23,9 +28,17 @@ train_coef = 0.8
 test_coef = 0.1
 val_coef = 0.1
 SAVE_MODEL = True
-import cv2
 LOAD_MODEL = True
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    plot_image_with_landmarks(
+        checkpoint=CHECKPOINT_FILE,
+        model=model, optimizer=optimizer, device=DEVICE,
+        lr=LEARNING_RATE,
+        image_path=image_to_plot)
+
+
+def trainTheModel():
     train(model,
           DEVICE,
           LEARNING_RATE,
@@ -69,6 +82,7 @@ if __name__ == '__main__':
     #       SAVE_MODEL=SAVE_MODEL,
     #       LOAD_MODEL=LOAD_MODEL,
     #       )
+
 # test(BATCH_SIZE=BATCH_SIZE,
 #      PIN_MEMORY=PIN_MEMORY,
 #      NUM_WORKERS=NUM_WORKERS,
@@ -140,11 +154,8 @@ if __name__ == '__main__':
 # # # # #      )
 
 # print("============================")
-# plot_image_with_landmarks(
-#     checkpoint="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/models/fisrtVGG16KeyPointsModel.pth.tar",
-#     model=model, optimizer=optimizer, device=DEVICE,
-#     lr=LEARNING_RATE,
-#     image_path="D:/ENSI/3eme/Aprentissage_supervisé/Driver_fatigue_detection_project/images/00000.png")
+
+
 # # import cv2
 
 # image = cv2.imread("C:/Users/Utilisateur/Desktop/images/04999.png")
